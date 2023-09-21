@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <template id="stock_request_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">                        
+                        
+                        <br/>
+                        <h1 t-field="o.name" class="mt0 float-left"/>
+                        <div class="row mt48 mb32">
+                            <div class="col-auto" name="div_origin">
+                                <strong>Request:</strong>
+                                <p t-field="o.name"/>
+                            </div>
+                            <div class="col-auto" name="div_state">
+                                <strong>Status:</strong>
+                                <p t-field="o.state"/>
+                            </div>
+                            <div class="col-auto" name="div_sched_date">
+                                <strong>Order Date:</strong>
+                                <p t-field="o.request_date"/>
+                            </div>
+                        </div>
+                        <table class="table table-sm" t-if="o.product_lines_ids">
+                            <!-- <t t-set="has_barcode" t-value="any([move_ids_without_package.product_id and move_ids_without_package.product_id.sudo().barcode or move_ids_without_package.package_id for move_ids_without_package in o.move_line_ids])"/>
+                            <t t-set="has_serial_number" t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/> -->
+                            <thead>
+                                <tr>
+                                    <th name="th_product">
+                                        <strong>Product</strong>
+                                    </th>
+                                     <th>
+                                        <strong>Part Number</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Quantity</strong>
+                                    </th>
+                                    <th name="th_unit" >
+                                        <strong>Unit Price</strong>
+                                    </th>
+                                    <th name="th_total" >
+                                        <strong>Total Price</strong>
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.product_lines_ids.sorted(key=lambda m: m.product_id.id)" t-as="move">
+                                    <!-- In case you come accross duplicated lines, ask NIM or LAP -->
+                                    <!-- <t t-foreach="move.move_line_ids.sorted(key=lambda ml: ml.location_id.id)" t-as="ml"> -->
+                                        <tr>
+                                            <td>
+                                                <span t-field="move.product_id.name"/><br/>
+                                            </td>
+                                            <td>
+                                                <span t-field="move.product_id.default_code"/><br/>
+                                            </td>
+                                            <td>                                               
+                                                <span t-field="move.requested_qty"/><br/>
+                                            </td>     
+                                            <td>                                               
+                                                <span t-field="move.unit_price"/><br/>
+                                            </td>                                         
+                                            <td>                                               
+                                                <span t-field="move.total_price"/><br/>
+                                            </td>   
+                                           
+                                        </tr>
+                                    <!-- </t> -->
+                                </t>
+                              </tbody>
+                        </table>
+                        <div class="row justify-content-end">
+                            <div class="col-3">
+                                <table class="table table-sm">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.total"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row mt32 mb32">
+                            <div class="col-2">
+                                <strong>Validated By:</strong>
+                                <p t-field="o.validated_by"/>
+                               
+                            </div>
+                            <div class="col-3">
+                              
+                            </div>
+                             <div class="col-3">
+                              
+                            </div>
+                            <div class="col-4">
+                                <strong>Received By:</strong>
+                                <p t-field="o.recived_by"/><br/>
+                                <p>Certified honest and conform,<br/>(Date and signature).<br/><br/></p>
+
+                            </div>
+                             
+                       
+                 
+                        
+                    </div>
+                        <!-- <div class="row mt48 mb32">
+                            <div class="col-auto" name="div_origin">
+                                <strong>Requested By:</strong>
+                                <p t-field="o.requested_by"/>
+                            </div>
+                            <div class="col-auto" name="div_state">
+                                <strong>Checked By:</strong>
+                                <p t-field="o.validated_by"/>
+                            </div>
+                            <div class="col-auto" name="div_sched_date">
+                                <strong>Approved By:</strong>
+                                <p t-field="o.approved_by"/>
+                            </div>
+                            <div class="col-auto" name="div_sched_date">
+                                <strong>Recived By:</strong>
+                                <p t-field="o.recived_by"/>
+                            </div>
+                        </div> -->
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

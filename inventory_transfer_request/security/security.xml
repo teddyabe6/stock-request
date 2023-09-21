@@ -1,0 +1,25 @@
+<odoo>  
+    <data>
+
+        <record id="module_category_inventory_transfer" model="ir.module.category">
+            <field name="name">Inventory Transfer</field>
+        </record>
+
+        <record id="group_inventory_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_inventory_transfer"/>
+        </record>
+        <record id="group_inventory_validator" model="res.groups">
+            <field name="name">Inventory Validator</field>            
+            <field name="category_id" ref="module_category_inventory_transfer"/>
+        </record>
+        <record id="group_inventory_approver" model="res.groups">
+            <field name="name">Inventory Approver</field>            
+            <field name="category_id" ref="module_category_inventory_transfer"/>
+        </record>
+        <record id="group_inventory_Internal_transfer" model="res.groups">
+            <field name="name">Inventory Transfer</field>            
+            <field name="category_id" ref="module_category_inventory_transfer"/>
+        </record>
+    </data>
+</odoo>

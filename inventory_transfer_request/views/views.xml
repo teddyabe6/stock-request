@@ -1,0 +1,167 @@
+<odoo>
+
+  <data>
+    <!-- explicit list view definition -->
+    <record id="seq_inventory_request_seq" model="ir.sequence">
+      <field name="name">Request Code</field>
+      <field name="code">inventory_transfer_request.inventory_transfer_request.sequence</field>
+      <field name="prefix">INV/REQ</field>
+      <field name="number_next">28</field>
+      <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field eval="False" name="company_id"/>
+  </record>
+
+    <record model="ir.ui.view" id="inventory_transfer_request.list">
+      <field name="name">inventory_transfer_request list</field>
+      <field name="model">inventory_transfer_request.inventory_transfer_request</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="requested_by"/>
+          <field name="request_date"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="stock_form_inherited_field" model="ir.ui.view">
+      <field name="name">stock.pick_added_fields</field>
+      <field name="model">stock.picking</field>
+      <field name="inherit_id" ref="stock.view_picking_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='origin']" position="after">
+          <field name="transfer_request_id"/>          
+        </xpath>
+      </field>
+    </record>
+    
+    <record model="ir.ui.view" id="inventory_transfer_request.form">
+      <field name="name">inventory_transfer_request list</field>
+      <field name="model">inventory_transfer_request.inventory_transfer_request</field>
+      <field name="arch" type="xml">
+        <form string="Transfer Request" version="7.0">
+                        <header>                            
+                            <button name="button_send_request" states="draft" string="Send Request" type="object" class="oe_highlight" groups="inventory_transfer_request.group_inventory_user"/>
+                            <button name="button_validate" states="sent" string="Validate" type="object" class="oe_highlight" groups="inventory_transfer_request.group_inventory_validator"/>
+                            <button name="button_approve" states="validated" string="Approve" type="object" class="oe_highlight" groups="inventory_transfer_request.group_inventory_approver"/>
+                            <button name="button_confirm" states="approved" string="Confirm" type="object" class="oe_highlight" groups="inventory_transfer_request.group_inventory_user"/>
+                            <button name="button_reset_to_draft" states="approved,sent" string="Reset" type="object" class="oe_highlight" groups="inventory_transfer_request.group_inventory_approver"/>
+                            <button name="button_refuse" states="approved" string="Refuse" type="object" class="oe_highlight" groups="inventory_transfer_request.group_inventory_approver"/>
+                            <button name="button_make_transfer"  states="approved" string="Make Transfer" type="object" class="oe_highlight" groups="inventory_transfer_request.group_inventory_Internal_transfer"/>                               
+                            
+                            <field name="state" widget="statusbar" />
+                        </header>
+                        <sheet>                           
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                                <group>
+                                    <field name="description"/>
+                                </group>
+                            </group>        
+                            <group>        
+                                <group>
+                                    <field name="requested_by" invisible="1"/>
+                                    <field name="validated_by" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                    <field name="recived_by" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                </group>
+                                <group>
+                                    <field name="request_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                </group>
+                            </group>
+                            <notebook>
+                                <page string="Products">
+                                    <field name="product_lines_ids" attrs="{'readonly':[('state','!=','draft')]}">
+                                        <tree editable="bottom" >
+                                            <field name="product_id" /> 
+                                            <field name="part_number" /> 
+                                            <field name="requested_qty" /> 
+                                            <field name="unit_price" /> 
+                                            <field name="total_price" /> 
+                                        </tree>                                     
+                                    </field>
+                                    <group class="oe_subtotal_footer oe_right">
+                                      <field name="total" widget="monetary" force_save="1"/>
+                                     </group>
+                                </page>                                
+                            </notebook>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="activity_ids" widget="mail_activity"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+        </form>                
+      </field>
+    </record>
+
+
+    
+    <record model="ir.ui.view" id="inventory_transfer_request.product_list">
+      <field name="name">Transfer Request list</field>
+      <field name="model">inventory.transfer.line</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="product_id"/>
+          <field name="part_number"/>
+          <field name="request_date"/>
+          <field name="requested_qty"/>
+          <field name="unit_price"/>
+          <field name="total_price"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="inventory_transfer_request.action_window">
+      <field name="name">inventory transfer request </field>
+      <field name="res_model">inventory_transfer_request.inventory_transfer_request</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="inventory_transfer_request.line_action_window">
+      <field name="name">inventory transfer request line</field>
+      <field name="res_model">inventory.transfer.line</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="inventory_transfer_request.action_server">
+      <field name="name">inventory_transfer_request server</field>
+      <field name="model_id" ref="model_inventory_transfer_request_inventory_transfer_request"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <menuitem name="Inventory Transfer Request" id="inventory_transfer_request.menu_root"/>
+
+    <!-- menu categories -->
+
+    <menuitem name="Inventory Requst" id="inventory_transfer_request.menu_inventory_request" parent="inventory_transfer_request.menu_root"/>
+    <!-- <menuitem name="Transfer" id="inventory_transfer_request.menu_2" parent="inventory_transfer_request.menu_root"/> -->
+
+    <!-- actions -->
+    <menuitem name="Transfer Request" id="inventory_transfer_request.menu_tranfer_request" parent="inventory_transfer_request.menu_inventory_request"
+              action="inventory_transfer_request.action_window"/>
+    <menuitem name="Transfer Request Line" id="inventory_transfer_request.menu_tranfer_request_line" parent="inventory_transfer_request.menu_inventory_request"
+              action="inventory_transfer_request.line_action_window"/>
+<!--
+    <menuitem name="Server to list" id="inventory_transfer_request" parent="inventory_transfer_request.menu_2"
+              action="inventory_transfer_request.action_server"/>
+-->
+  </data>
+</odoo>

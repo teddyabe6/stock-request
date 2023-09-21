@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+        <record id="action_report_stock_request" model="ir.actions.report">
+            <field name="name">Stock Request Report</field>
+            <field name="model">inventory_transfer_request.inventory_transfer_request</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">inventory_transfer_request.stock_request_report_template</field>
+            <field name="report_file">inventory_transfer_request.stock_request_report_template</field>
+            <field name="binding_model_id" ref="model_inventory_transfer_request_inventory_transfer_request"/>
+            <field name="binding_type">report</field>
+          </record>
+
+<!--
+        <template id="listing">
+          <ul>
+            <li t-foreach="objects" t-as="object">
+              <a t-attf-href="#{ root }/objects/#{ object.id }">
+                <t t-esc="object.display_name"/>
+              </a>
+            </li>
+          </ul>
+        </template>
+        <template id="object">
+          <h1><t t-esc="object.display_name"/></h1>
+          <dl>
+            <t t-foreach="object._fields" t-as="field">
+              <dt><t t-esc="field"/></dt>
+              <dd><t t-esc="object[field]"/></dd>
+            </t>
+          </dl>
+        </template>
+-->
+    </data>
+</odoo>
