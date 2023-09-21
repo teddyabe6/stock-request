@@ -1,0 +1,1 @@
+This Project Is a Module for Odoo. Its stock requisition module enables only designated users to make stock item requests, as well as to have two approval states and to generate a PDF report regarding transfers after they are complete.
